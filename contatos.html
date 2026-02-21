@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contatos — Ebenezer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--brand:#0084FF;--text:#2c2c2c}
+body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#f5f5f5;color:var(--text);line-height:1.6}
+
+ /* ===== Navbar ===== */
+    .navbar{position:sticky;top:0;z-index:1000;background:#000;color:#fff;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:.9rem 1.1rem;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+    .logo{font-weight:900;letter-spacing:.3px;font-size:1.9rem;color:var(--brand)}
+    .logo span{color:#fff}
+    nav#mainNav{display:flex;align-items:center}
+    nav#mainNav ul{display:flex;list-style:none;gap:1.3rem}
+    nav#mainNav a{color:#fff;opacity:.95;font-weight:600;padding:.45rem .35rem;border-radius:10px}
+    nav#mainNav a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+    .menu-button{display:none;font-size:1.6rem;color:#fff;background:#111;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.2rem .55rem;cursor:pointer}
+    .nav-overlay{display:none}
+    .nav-right{display:flex;align-items:center;gap:.6rem}
+    .nav-icon-container{position:relative;display:flex;align-items:center}
+    .nav-icon-container img{width:36px;height:36px;filter:invert(1)}
+    .cart-counter{position:absolute;top:-6px;right:-6px;background:#ff3b3b;color:#fff;border-radius:999px;padding:2px 6px;font-size:12px;font-weight:800}
+
+    @media (max-width:880px){
+      .menu-button{display:inline-flex}
+      nav#mainNav{position:fixed;top:0;right:0;height:100dvh;width:min(86vw,360px);background:#111;padding:78px 1rem 1rem;transform:translateX(100%);transition:transform .28s ease;box-shadow:-18px 0 32px rgba(0,0,0,.35);z-index:1002}
+      nav#mainNav ul{flex-direction:column;gap:0}
+      nav#mainNav li{border-bottom:1px solid rgba(255,255,255,.08)}
+      nav#mainNav a{display:block;padding:1rem}
+      nav#mainNav.show-menu{transform:translateX(0)}
+      .nav-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .28s ease;z-index:1001}
+      .nav-overlay.active{opacity:1;pointer-events:auto}
+    }
+
+/* Header */
+header{background:linear-gradient(135deg,#104372,#0f7794);padding:clamp(2rem,5vw,3rem) 1rem;color:#fff;text-align:center}
+header h1{font-size:clamp(1.6rem,3.8vw,2.2rem)}
+
+/* Conteúdo */
+.container{max-width:1100px;margin:2rem auto;padding:0 1rem}
+.social-grid{display:grid;gap:1rem;grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.social-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.social-grid{grid-template-columns:1fr}}
+.grid-2{display:grid;gap:1rem;grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);padding:1.2rem}
+.center{text-align:center}
+.btn{border:none;background:var(--brand);color:#fff;font-weight:bold;padding:.75rem 1.2rem;border-radius:10px;cursor:pointer;transition:.2s;display:inline-block;text-decoration:none;white-space:nowrap}
+.btn:hover{background:#005bb5;transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:#005bb5;border:2px solid #cfe3ff}
+.link{color:#005bb5;text-decoration:none}
+.link:hover{text-decoration:underline}
+.social{background:#fff;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);padding:1.2rem;text-align:center;transition:transform .3s ease, background-color .3s ease, color .3s ease, box-shadow .3s ease}
+.social svg{width:min(52px,12vw);height:min(52px,12vw);margin-bottom:.5rem;transition:transform .3s ease}
+
+/* Hovers oficiais */
+.social.whatsapp:hover{background:#25D366;color:#fff;transform:translateY(-5px);box-shadow:0 14px 30px rgba(0,0,0,.12)}
+.social.whatsapp:hover .btn,.social.whatsapp:hover .btn-ghost{background:#fff;color:#25D366;border-color:#fff}
+.social.whatsapp:hover svg{transform:scale(1.1)}
+.social.instagram:hover{background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af,#515bd4);color:#fff;transform:translateY(-5px)}
+.social.instagram:hover .btn,.social.instagram:hover .btn-ghost{background:#fff;color:#dd2a7b;border-color:#fff}
+.social.instagram:hover svg{transform:scale(1.1)}
+.social.tiktok:hover{background:#010101;color:#fff;transform:translateY(-5px)}
+.social.tiktok:hover .btn,.social.tiktok:hover .btn-ghost{background:#fff;color:#010101;border-color:#fff}
+.social.tiktok:hover svg{transform:scale(1.1)}
+.social.facebook:hover{background:#1877F2;color:#fff;transform:translateY(-5px)}
+.social.facebook:hover .btn,.social.facebook:hover .btn-ghost{background:#fff;color:#1877F2;border-color:#fff}
+.social.facebook:hover svg{transform:scale(1.1)}
+
+label{font-size:.9rem;color:#444}
+input,textarea,select{width:100%;padding:.8rem 1rem;border:2px solid #e5e7eb;border-radius:10px;background:#fff;outline:none;transition:.15s}
+input:focus,textarea:focus,select:focus{border-color:var(--brand)}
+footer{background:#000;color:#fff;padding:2rem;text-align:center;margin-top:2rem}
+footer ul{list-style:none;display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem}
+footer ul li:hover{color:var(--brand)}
+</style>
+</head>
+<body>
+<script src="./js/ebz-theme.js" defer></script>
+
+<!-- Navbar -->
+<div class="navbar" style="z-index:1000;">
+  <div class="logo">EBEN<span>ÉZER</span></div>
+
+  <div class="menu-button" id="menuBtn" aria-label="Abrir menu" aria-expanded="false">&#9776;</div>
+
+  <nav id="mainNav" aria-label="Menu principal">
+    <ul>
+      <li>
+        <a href="index.html">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-10.5Z"/>
+          </svg>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="produtos.html">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M3 3h8v8H3V3Zm10 0h8v8h-8V3ZM3 13h8v8H3v-8Zm10 0h8v8h-8v-8Z"/>
+          </svg>
+          <span>Produtos</span>
+        </a>
+      </li>
+      <li>
+        <a href="sobre.html">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm1 7V7h-2v2h2Zm0 8v-6h-2v6h2Z"/>
+          </svg>
+          <span>Sobre</span>
+        </a>
+      </li>
+      <li>
+        <a href="contatos.html">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/>
+          </svg>
+          <span>Contatos</span>
+        </a>
+      </li>
+      <li>
+        <a href="conta.html">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+          </svg>
+          <span>Conta</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+<!-- overlay para o drawer -->
+<div class="nav-overlay" id="navOverlay"></div>
+
+  </nav>
+  <div class="nav-icon-container">
+    <a href="carrinho.html"><img src="images/cart.png" alt="Carrinho"/><span id="cartCounter" class="cart-counter">0</span></a>
+  </div>
+</div>
+<div class="nav-overlay" id="navOverlay"></div>
+
+<header>
+  <h1>Fale com a Ebenezer</h1>
+  <p>Escolha o canal que preferir — respondemos rapidinho 💙</p>
+</header>
+
+<main class="container">
+  <section class="social-grid" aria-label="Canais de contato">
+    <div class="social whatsapp center">
+      <svg viewBox="0 0 256 256" aria-hidden="true"><path fill="#25D366" d="M128 0c70.7 0 128 57.3 128 128s-57.3 128-128 128c-22.4 0-43.5-5.8-61.8-16l-44.8 11.7 12-43C20.3 189.5 12 159.9 12 128 12 57.3 69.3 0 140 0h-12Z"/><path fill="#fff" d="M190 66.5c-16-16.2-37.4-25.1-60.1-25.1c-46.9 0-85 38.2-85 85.1c0 15 3.9 29.6 11.4 42.5l-7.4 27.1l27.9-7.3c12.5 7 26.6 10.7 41.2 10.7h.1c46.9 0 85.1-38.2 85.1-85.1c0-22.7-8.8-44.1-25.2-60.9Z"/></svg>
+      <h3>WhatsApp</h3><p>Dúvidas, prazos e disponibilidade.</p>
+      <a class="btn" href="https://wa.me/5511967040951?text=Olá!%20Quero%20falar%20com%20a%20Ebenezer" target="_blank">Chamar no WhatsApp</a>
+      <div style="margin-top:.5rem" class="link">+55 (11) 96704-0951</div>
+    </div>
+    <div class="social instagram center">
+      <svg viewBox="0 0 256 256" aria-hidden="true"><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f58529"/><stop offset=".3" stop-color="#dd2a7b"/><stop offset=".6" stop-color="#8134af"/><stop offset="1" stop-color="#515bd4"/></linearGradient><rect width="256" height="256" rx="56" fill="url(#ig)"/><circle cx="194" cy="62" r="18" fill="#fff"/><circle cx="128" cy="130" r="50" fill="none" stroke="#fff" stroke-width="22"/></svg>
+      <h3>Instagram</h3><p>Novidades, ofertas e bastidores.</p>
+      <a class="btn-ghost btn" href="https://instagram.com/ebenezerassistencia" target="_blank">@ebenezerassistencia</a>
+    </div>
+    <div class="social tiktok center">
+      <svg viewBox="0 0 256 256" aria-hidden="true"><rect width="256" height="256" rx="36" fill="#000"/><path d="M170 78c12 14 26 22 44 24v26c-18-1-33-7-44-16v52c0 28-23 50-51 50s-51-22-51-50s23-50 51-50h9v28h-9c-12 0-22 10-22 22s10 22 22 22s22-10 22-22V50h29v28z" fill="#fff"/><path d="M170 78v14c-7-5-13-11-18-18V50h18v28z" fill="#fe2c55"/><path d="M214 101v13c-18-1-33-7-44-16v-13c11 9 26 15 44 16z" fill="#25f4ee"/></svg>
+      <h3>TikTok</h3><p>Reviews rápidas e dicas.</p>
+      <a class="btn-ghost btn" href="https://tiktok.com/@ebenzer.assistnci" target="_blank">@ebenzer.assistnci</a>
+    </div>
+    <div class="social facebook center">
+      <svg viewBox="0 0 256 256" aria-hidden="true"><rect width="256" height="256" rx="36" fill="#1877F2"/><path d="M142 224v-82h27l5-32h-32v-20c0-9 3-15 16-15h17V46c-3 0-14-2-27-2c-27 0-45 16-45 44v22H73v32h30v82h39z" fill="#fff"/></svg>
+      <h3>Facebook</h3><p>Conteúdos, fotos e avisos.</p>
+      <a class="btn-ghost btn" href="https://www.facebook.com/search/top?q=Ebenezer%20Assist%C3%AAncia" target="_blank">Ebenezer Assistência</a>
+    </div>
+  </section>
+
+  <section class="grid-2" style="margin-top:2rem">
+    <div class="card">
+      <h3>Outros contatos</h3>
+      <p><strong>E-mail:</strong> <a class="link" href="mailto:contato@ebenezerecommerce.com.br">contato@ebenezerecommerce.com.br</a></p>
+      <p><strong>Telefone:</strong> <span class="link">+55 (11) 96704-0951</span></p>
+      <p style="margin-top:.6rem"><strong>Horário de atendimento:</strong><br/>Seg a Sáb, 9h–18h e Dom, 9h-15h</p>
+    </div>
+    <div class="card">
+      <h3>Envie sua mensagem</h3>
+      <form id="formContato">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+          <div><label for="nome">Nome</label><input id="nome" type="text" required placeholder="Seu nome"></div>
+          <div><label for="email">E-mail</label><input id="email" type="email" required placeholder="voce@exemplo.com"></div>
+        </div>
+        <div style="margin-top:.6rem"><label for="assunto">Assunto</label>
+          <select id="assunto"><option>Dúvidas sobre produto</option><option>Pedido e entrega</option><option>Suporte técnico</option><option>Parcerias</option><option>Outros</option></select>
+        </div>
+        <div style="margin-top:.6rem"><label for="mensagem">Mensagem</label><textarea id="mensagem" rows="4" required placeholder="Como podemos ajudar?"></textarea></div>
+        <div class="row" style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem">
+          <button type="submit" class="btn">Enviar pelo WhatsApp</button>
+          <a class="btn-ghost btn" id="btnEmail" href="#" target="_blank" rel="noopener">Enviar por E-mail</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section style="margin-top:2rem">
+    <div class="card">
+      <h3>Atendimento online para todo o Brasil</h3>
+      <p style="color:#555">Entregamos em todo o país com parceiros de logística confiáveis.</p>
+      <div style="margin-top:1rem;overflow:hidden;border-radius:12px">
+        <iframe title="Mapa" src="https://www.openstreetmap.org/export/embed.html?bbox=-46.693%2C-23.568%2C-46.62%2C-23.52&layer=mapnik" style="width:100%;height:300px;border:0"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <h1>EBEN<span>ÉZER</span></h1>
+  <p>Nosso objetivo é ajudar pessoas a adquirir nossos produtos à distância</p>
+  <ul><li>Instagram</li><li>TikTok</li><li>Facebook</li><li>WhatsApp</li></ul>
+  <p>2025 - Todos os direitos reservados</p>
+</footer>
+
+<script>
+// Drawer
+const menuBtn=document.getElementById('menuBtn');
+const nav=document.getElementById('mainNav');
+const overlay=document.getElementById('navOverlay');
+function toggleMenu(show){const willOpen=typeof show==='boolean'?show:!nav.classList.contains('show-menu');nav.classList.toggle('show-menu',willOpen);overlay.classList.toggle('active',willOpen);menuBtn.setAttribute('aria-expanded',String(willOpen));}
+menuBtn.addEventListener('click',()=>toggleMenu());
+overlay.addEventListener('click',()=>toggleMenu(false));
+window.addEventListener('keydown',e=>{ if(e.key==='Escape') toggleMenu(false); });
+
+// Carrinho
+const cartCounter=document.getElementById('cartCounter'); let cart=JSON.parse(localStorage.getItem('cart')||'[]'); cartCounter.textContent=cart.length;
+
+// Formulário
+const form=document.getElementById('formContato'); const btnEmail=document.getElementById('btnEmail'); const WHATS='5511967040951';
+function buildMessage(){const nome=document.getElementById('nome').value.trim();const email=document.getElementById('email').value.trim();const assunto=document.getElementById('assunto').value;const mensagem=document.getElementById('mensagem').value.trim();return `Olá, sou ${nome} (${email}).\nAssunto: ${assunto}\n\n${mensagem}`;}
+form.addEventListener('submit',e=>{e.preventDefault();const txt=encodeURIComponent(buildMessage());window.open(`https://wa.me/${WHATS}?text=${txt}`,'_blank');});
+btnEmail.addEventListener('click',()=>{const txt=encodeURIComponent(buildMessage());btnEmail.href=`mailto:contato@ebenezerecommerce.com.br?subject=Contato%20via%20site&body=${txt}`;});
+</script>
+</body>
+<script src="app.js"></script>
+</html>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--brand:#0084FF;--text:#2c2c2c}
+body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#f5f5f5;color:var(--text)}
+
+/* Navbar + Drawer */
+.navbar{background:#000;padding:1rem 2rem;position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.logo{font-size:2rem;font-weight:bold;color:var(--brand)} .logo span{color:#fff}
+nav{display:flex;align-items:center}
+nav ul{display:flex;list-style:none;gap:1.8rem}
+nav ul li a{color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:.6rem;font-weight:500;transition:.2s}
+nav ul li a:hover{font-weight:bold;transform:translateY(-3px)}
+.nav-ico{width:20px;height:20px;display:none;color:#fff}
+.menu-button{display:none;font-size:2rem;color:#fff;cursor:pointer;user-select:none}
+.nav-icon-container{display:flex;align-items:center;position:relative}
+.cart-counter{position:absolute;top:-5px;right:-5px;background:red;color:#fff;font-size:13px;padding:3px 7px;border-radius:50%;font-weight:bold}
+.nav-overlay{display:none}
+
+@media(max-width:800px){
+  nav{position:fixed;top:0;right:0;height:100dvh;width:min(86vw,360px);background:#111;padding-top:74px;transform:translateX(100%);transition:transform .3s ease;box-shadow:-12px 0 28px rgba(0,0,0,.35);z-index:1002}
+  nav.show-menu{transform:translateX(0)}
+  .menu-button{display:block}
+  .nav-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:1001}
+  .nav-overlay.active{opacity:1;pointer-events:auto}
+  nav ul{display:flex;flex-direction:column;gap:0}
+  nav ul li{border-bottom:1px solid rgba(255,255,255,.08)}
+  nav ul li a{padding:1rem 1.25rem;width:100%}
+  .nav-ico{display:inline-block}
+}
+
+/* Conteúdo genérico */
+header{background:linear-gradient(135deg,#104372,#0f7794);padding:2.2rem 1rem;color:#fff;text-align:center}
+header h1{font-size:clamp(1.5rem,4vw,2.4rem)}
+.container{max-width:1100px;margin:2rem auto;padding:0 1rem}
+.card{background:#fff;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);padding:1.2rem;margin-top:1rem}
+.grid{display:grid;gap:1rem}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:800px){.grid-2{grid-template-columns:1fr}}
+.btn{border:none;background:var(--brand);color:#fff;font-weight:bold;padding:.7rem 1.2rem;border-radius:10px;cursor:pointer;transition:.2s;text-decoration:none;display:inline-block}
+.btn:hover{background:#005bb5}
+.btn-outline{background:#fff;color:#005bb5;border:2px solid #cfe3ff}
+
+/* Footer */
+footer{background:#000;color:#fff;text-align:center;padding:2rem;margin-top:2rem}
+footer h1{font-size:2rem}
+footer h1 span{color:#fff}
+</style>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Meu Carrinho — Ebenezer</title>
+<style>
+  /* ===== Tokens ===== */
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --brand:#0084FF; --brand-2:#2AA7FF; --ok:#18a324; --warn:#ffb020; --danger:#ff3b3b;
+    --text:#1d1f23; --muted:#5a6578; --bg:#f5f7fb; --surface:#ffffff; --radius:16px;
+    --shadow-sm:0 2px 10px rgba(0,0,0,.10); --shadow-md:0 10px 25px rgba(0,0,0,.16);
+  }
+  body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+
+  /* ===== Navbar simples ===== */
+  .navbar{background:#000;color:#fff;position:sticky;top:0;z-index:1000;padding:.9rem 1.1rem;box-shadow:0 6px 24px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:space-between}
+  .logo{font-weight:900;letter-spacing:.3px;font-size:1.6rem;color:var(--brand)}
+  .logo span{color:#fff}
+  .navbar a.back{display:inline-flex;align-items:center;gap:.5rem;background:#111;border:1px solid rgba(255,255,255,.15);padding:.45rem .8rem;border-radius:10px;color:#fff;text-decoration:none}
+  .navbar a.back:hover{filter:brightness(1.05)}
+
+  /* ===== Layout ===== */
+  .container{max-width:1100px;margin:24px auto;padding:0 16px}
+  .cart-wrap{display:grid;gap:18px;grid-template-columns:2fr 1fr}
+  @media(max-width:980px){.cart-wrap{grid-template-columns:1fr}}
+
+  /* ===== Lista de itens ===== */
+  .card{background:var(--surface);border:1px solid #eef3ff;border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+  .card h2{font-size:1.25rem;padding:1rem 1.2rem;border-bottom:1px solid #eef3ff}
+  .items{display:flex;flex-direction:column}
+  .item{display:grid;grid-template-columns:84px 1fr auto auto;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid #f0f3fb}
+  .item:first-child{border-top:none}
+  .thumb{width:84px;height:84px;border-radius:12px;overflow:hidden;background:#fff;display:grid;place-items:center;border:1px solid #eef3ff}
+  .thumb img{max-width:100%;max-height:100%;object-fit:contain}
+  .title{font-weight:800}
+  .meta{font-size:.92rem;color:var(--muted)}
+  .price{font-weight:900;white-space:nowrap}
+  .qty{display:inline-flex;align-items:center;gap:6px}
+  .qty button{width:28px;height:28px;border-radius:8px;border:1px solid #e7ecfb;background:#fff;cursor:pointer}
+  .qty input{width:48px;text-align:center;border:1px solid #e7ecfb;border-radius:8px;padding:6px 8px}
+  .remove{border:none;background:transparent;color:var(--danger);cursor:pointer;font-weight:700}
+  .actions-row{display:flex;gap:8px;align-items:center}
+
+  @media(max-width:720px){
+    .item{grid-template-columns:72px 1fr auto;grid-template-areas:
+      'thumb title remove'
+      'thumb meta  meta'
+      'thumb qty   price';
+    }
+    .thumb{grid-area:thumb;width:72px;height:72px}
+    .title{grid-area:title}
+    .meta{grid-area:meta}
+    .qty{grid-area:qty}
+    .price{grid-area:price;justify-self:end}
+    .remove{grid-area:remove}
+  }
+
+  /* ===== Resumo ===== */
+  .summary{background:var(--surface);border:1px solid #eef3ff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:1rem}
+  .summary h3{font-size:1.1rem;margin-bottom:.6rem}
+  .row{display:flex;justify-content:space-between;align-items:center;margin:.35rem 0}
+  .total{font-size:1.4rem;font-weight:900}
+  .coupon{display:flex;gap:8px;margin-top:.6rem}
+  .coupon input{flex:1;border:1px solid #e7ecfb;border-radius:10px;padding:.65rem .8rem}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:.65rem 1rem;border-radius:12px;border:1px solid #e9eefb;background:#fff;font-weight:800;cursor:pointer;text-decoration:none}
+  .btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff}
+  .btn.full{width:100%}
+  .note{font-size:.9rem;color:var(--muted)}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;color:var(--ok)}
+
+  /* ===== Toast ===== */
+  #toastHost{position:fixed;inset:auto 0 16px 0;display:grid;place-items:center;gap:10px;pointer-events:none;z-index:9999}
+  .toast{pointer-events:auto;max-width:92vw;padding:12px 16px;background:rgba(15,15,15,.92);color:#fff;border-radius:12px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);transform:translateY(12px);opacity:0;transition:transform .25s ease, opacity .25s ease}
+  .toast.show{transform:translateY(0);opacity:1}
+
+  .empty{padding:2rem;text-align:center}
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <a class="logo" href="index.html">EBEN<span>ÉZER</span></a>
+    <a class="back" href="produtos.html">← Voltar</a>
+  </div>
+
+  <main class="container">
+    <h1 style="margin:4px 0 12px">Meu Carrinho</h1>
+
+    <div class="cart-wrap">
+      <!-- Lista -->
+      <section class="card" aria-labelledby="cartTitle">
+        <h2 id="cartTitle">Itens</h2>
+        <div id="items" class="items"></div>
+      </section>
+
+      <!-- Resumo -->
+      <aside class="summary" aria-labelledby="summaryTitle">
+        <h3 id="summaryTitle">Resumo</h3>
+        <div class="row"><span>Subtotal</span><strong id="sub">—</strong></div>
+        <div class="row"><span>Frete</span><span id="ship">—</span></div>
+        <div class="row"><span>Desconto</span><span id="disc">—</span></div>
+        <div class="row total"><span>Total</span><span id="tot">—</span></div>
+        <div class="coupon" style="margin-top:.8rem">
+          <input id="cupom" placeholder="Cupom (ex.: EBZ10)" aria-label="Cupom de desconto" />
+          <button class="btn" id="aplicarCupom">Aplicar</button>
+        </div>
+        <p class="note" id="freteMsg" style="margin-top:.6rem"></p>
+        <button class="btn primary full" id="finalizar">Finalizar no WhatsApp</button>
+      </aside>
+    </div>
+
+    <section id="empty" class="empty" hidden>
+      <p>Seu carrinho está vazio.</p>
+      <p><a class="btn" href="produtos.html">Ver produtos</a></p>
+    </section>
+  </main>
+
+  <div id="toastHost" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+  // ===== Helpers =====
+  const fmtBR = v => Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const toastHost = document.getElementById('toastHost');
+  function showToast(msg=''){
+    if(!msg) return; const t=document.createElement('div'); t.className='toast'; t.textContent=msg; toastHost.appendChild(t);
+    requestAnimationFrame(()=> t.classList.add('show'));
+    setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(), 220); }, 1500);
+  }
+
+  // ===== Estado =====
+  let cart = [];
+  try{ cart = JSON.parse(localStorage.getItem('cart')||'[]'); }catch{}
+
+  const els = {
+    items: document.getElementById('items'),
+    sub: document.getElementById('sub'),
+    ship: document.getElementById('ship'),
+    disc: document.getElementById('disc'),
+    tot: document.getElementById('tot'),
+    cupom: document.getElementById('cupom'),
+    aplicar: document.getElementById('aplicarCupom'),
+    finalizar: document.getElementById('finalizar'),
+    empty: document.getElementById('empty'),
+  };
+
+  // ===== Regras (simples) =====
+  const SHIPPING_FREE_OVER = 200;       // frete grátis acima de R$ 200
+  const SHIPPING_FLAT = 19.9;           // senão, frete fixo
+  const COUPONS = { EBZ10: 0.10, EBZ15: 0.15 };
+  let appliedCoupon = localStorage.getItem('cart_coupon') || '';
+  if(appliedCoupon) els.cupom.value = appliedCoupon;
+
+  // ===== Renderização =====
+  function render(){
+    els.items.innerHTML = '';
+    if(!cart.length){
+      document.querySelector('.cart-wrap').style.display='none';
+      els.empty.hidden = false;
+      return;
+    }
+
+    let subtotal = 0;
+    cart.forEach((item, idx) => {
+      const price = Number(item.price)||0;
+      const qty = Math.max(1, Number(item.qty)||1);
+      subtotal += price * qty;
+
+      const row = document.createElement('div');
+      row.className = 'item';
+      row.innerHTML = `
+        <div class="thumb"><img alt="${item.name}" src="${item.image || item.img || ''}" loading="lazy" decoding="async"></div>
+        <div>
+          <div class="title">${item.name}</div>
+          <div class="meta">${item.color?`Cor: ${item.color} · `:''}${item.sku||''}</div>
+        </div>
+        <div class="qty" aria-label="Quantidade">
+          <button aria-label="Diminuir" data-dec>–</button>
+          <input type="number" min="1" step="1" value="${qty}" inputmode="numeric" data-qty>
+          <button aria-label="Aumentar" data-inc>+</button>
+        </div>
+        <div class="actions-row">
+          <div class="price">${fmtBR(price*qty)}</div>
+          <button class="remove" aria-label="Remover" data-rm>remover</button>
+        </div>
+      `;
+
+      // Listeners
+      const qtyInput = row.querySelector('[data-qty]');
+      row.querySelector('[data-inc]').addEventListener('click', ()=>{ qtyInput.value = Number(qtyInput.value||1)+1; commitQty(idx, qtyInput.value); });
+      row.querySelector('[data-dec]').addEventListener('click', ()=>{ qtyInput.value = Math.max(1, Number(qtyInput.value||1)-1); commitQty(idx, qtyInput.value); });
+      qtyInput.addEventListener('change', ()=> commitQty(idx, qtyInput.value));
+      row.querySelector('[data-rm]').addEventListener('click', ()=> removeIdx(idx));
+
+      els.items.appendChild(row);
+    });
+
+    // Totais
+    const ship = subtotal >= SHIPPING_FREE_OVER || subtotal===0 ? 0 : SHIPPING_FLAT;
+    const discPct = COUPONS[appliedCoupon?.toUpperCase?.()] || 0;
+    const discount = subtotal * discPct;
+    const total = Math.max(0, subtotal - discount + ship);
+
+    els.sub.textContent = fmtBR(subtotal);
+    els.ship.textContent = ship===0 ? 'R$ 0,00' : fmtBR(ship);
+    els.disc.textContent = discount ? `– ${fmtBR(discount)} (${Math.round(discPct*100)}%)` : '—';
+    els.tot.textContent = fmtBR(total);
+
+    const msg = ship===0 ? `Frete grátis em pedidos a partir de ${fmtBR(SHIPPING_FREE_OVER)}. ` : `Frete fixo de ${fmtBR(SHIPPING_FLAT)} para pedidos abaixo de ${fmtBR(SHIPPING_FREE_OVER)}. `;
+    document.getElementById('freteMsg').textContent = msg;
+  }
+
+  function commitQty(idx, v){
+    const val = Math.max(1, Number(v)||1);
+    cart[idx].qty = val;
+    persist();
+    render();
+  }
+
+  function removeIdx(idx){
+    const rem = cart.splice(idx,1)[0];
+    persist();
+    showToast(`${rem?.name||'Item'} removido`);
+    render();
+  }
+
+  function persist(){ localStorage.setItem('cart', JSON.stringify(cart)); }
+
+  // ===== Cupom =====
+  els.aplicar.addEventListener('click', ()=>{
+    const code = (els.cupom.value||'').trim().toUpperCase();
+    if(!code){ appliedCoupon=''; localStorage.removeItem('cart_coupon'); render(); return; }
+    if(!COUPONS[code]){ showToast('Cupom inválido'); return; }
+    appliedCoupon = code; localStorage.setItem('cart_coupon', code); showToast(`Cupom ${code} aplicado`); render();
+  });
+
+  async function finalizarPedido(){
+  if(!cart.length){
+    showToast("Carrinho vazio");
+    return;
+  }
+
+  try{
+    const response = await fetch("https://ebenezer-backend-c237.onrender.com/api/v1/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ items: cart })
+    });
+
+    const data = await response.json();
+
+    if(response.ok){
+      showToast("Pedido criado com sucesso!");
+      
+      // limpar carrinho
+      cart = [];
+      localStorage.removeItem("cart");
+      render();
+    } else {
+      showToast(data.error || "Erro ao criar pedido");
+    }
+
+  } catch(err){
+    console.error(err);
+    showToast("Erro ao conectar com o servidor");
+  }
+}
+
+  // ===== Finalizar via WhatsApp =====
+ els.finalizar.addEventListener('click', ()=>{
+  finalizarPedido();
+});
+
+</script>
+</body>
+</html>

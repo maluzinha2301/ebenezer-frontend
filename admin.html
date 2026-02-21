@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Pedidos</title>
+
+<style>
+body{font-family:Arial;background:#f5f7fb;margin:0;padding:20px}
+h1{margin-bottom:20px}
+.card{
+  background:#fff;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 4px 15px rgba(0,0,0,.08);
+  margin-bottom:15px;
+}
+.order-id{font-weight:bold;color:#0084FF}
+.item{margin-left:15px;font-size:14px}
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#0084FF;
+  color:#fff;
+  cursor:pointer;
+  margin-bottom:15px;
+}
+</style>
+</head>
+<body>
+
+<h1>📦 Painel de Pedidos</h1>
+<button onclick="loadOrders()">Atualizar</button>
+
+<div id="orders"></div>
+
+<script>
+const token = localStorage.getItem("admin_token");
+
+if(!token){
+  window.location.href = "login-admin.html";
+}
+
+const API = "https://ebenezer-backend-c237.onrender.com/api/v1/orders";
+
+async function loadOrders(){
+  try{
+    const res = await fetch(API, {
+      headers:{
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    if(res.status === 401 || res.status === 403){
+      localStorage.removeItem("admin_token");
+      window.location.href = "login-admin.html";
+      return;
+    }
+
+    const orders = await res.json();
+
+    const container = document.getElementById("orders");
+    container.innerHTML = "";
+
+    if(!orders.length){
+      container.innerHTML = "<p>Nenhum pedido encontrado.</p>";
+      return;
+    }
+
+    orders.reverse().forEach(order=>{
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="order-id">Pedido #${order._id}</div>
+        <div>Data: ${new Date(order.createdAt).toLocaleString()}</div>
+        <hr>
+        ${order.items.map(item => `
+          <div class="item">
+            • ${item.name} — ${item.qty}x — R$ ${item.price}
+          </div>
+        `).join("")}
+      `;
+
+      container.appendChild(card);
+    });
+
+  }catch(err){
+    console.error(err);
+    alert("Erro ao carregar pedidos");
+  }
+}
+
+loadOrders();
+</script>
+
+
+</body>
+</html>

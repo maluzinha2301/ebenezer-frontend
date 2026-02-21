@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Minha Conta — Ebenezer</title>
+
+<style>
+/* ===== Base ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#0084FF;
+  --text:#2c2c2c;
+  --card:#ffffff;
+  --muted:#6b7280;
+}
+body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#f5f7fb;color:var(--text);line-height:1.6}
+
+/* ===== Navbar ===== */
+.navbar{background:#000;padding:1rem 2rem;position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.logo{font-size:2rem;font-weight:800;color:var(--brand);letter-spacing:.3px}
+.logo span{color:#fff}
+
+/* Botão voltar */
+.back-button{display:none;align-items:center;gap:.4rem;color:#fff;background:none;border:none;font-size:1rem;cursor:pointer}
+.back-button svg{width:22px;height:22px;fill:#fff}
+
+/* Menu desktop */
+nav#mainNav{display:flex;align-items:center}
+nav#mainNav ul{display:flex;list-style:none;gap:1.8rem}
+nav#mainNav a{color:#fff;text-decoration:none;font-weight:600;transition:.2s}
+nav#mainNav a:hover{transform:translateY(-2px)}
+
+/* Carrinho */
+.nav-icon-container{display:flex;align-items:center;position:relative}
+.nav-icon-container img{width:40px;height:40px;filter:invert(1)}
+.cart-counter{position:absolute;top:-4px;right:-6px;background:#ff1e1e;color:#fff;font-size:12px;padding:4px 6px;border-radius:999px;font-weight:800;border:2px solid #000}
+
+/* Mobile: mostra botão voltar e esconde menu */
+@media(max-width:800px){
+  .back-button{display:flex}
+  nav#mainNav{display:none}
+}
+
+/* ===== Header compacto ===== */
+header{background:linear-gradient(135deg,#104372,#0f7794);padding:1.6rem 1rem;color:#fff;text-align:center}
+header h1{font-size:clamp(1.4rem,4vw,2rem)}
+
+/* ===== Página simples ===== */
+.container{max-width:780px;margin:1.6rem auto;padding:0 1rem}
+.card{background:var(--card);border-radius:16px;box-shadow:0 10px 24px rgba(0,0,0,.08);padding:1.2rem}
+.stack{display:grid;gap:1rem}
+label{font-size:.9rem;color:#444}
+input{width:100%;padding:.9rem 1rem;border:2px solid #e5e7eb;border-radius:12px;background:#fff;outline:none;transition:.15s}
+input:focus{border-color:var(--brand)}
+.actions{display:flex;gap:.6rem;flex-wrap:wrap}
+.btn{border:none;background:var(--brand);color:#fff;font-weight:700;padding:.85rem 1.2rem;border-radius:12px;cursor:pointer;transition:.2s}
+.btn:hover{background:#005bb5}
+.btn-ghost{background:#fff;color:#005bb5;border:2px solid #cfe3ff}
+.helper{font-size:.85rem;color:var(--muted)}
+
+/* ===== details (senha) ===== */
+details{background:#fff;border:2px solid #eef2ff;border-radius:14px;padding:1rem}
+summary{list-style:none;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:.6rem}
+summary::-webkit-details-marker{display:none}
+summary span.badge{font-size:.78rem;background:#eef6ff;color:#0f5298;border-radius:999px;padding:.18rem .6rem}
+
+/* Footer simples */
+footer{background:#000;color:#fff;text-align:center;padding:1.6rem;margin-top:2rem}
+footer h1{font-size:1.8rem}
+footer h1 span{color:#fff}
+</style>
+</head>
+<body>
+<script src="./js/ebz-theme.js" defer></script>
+
+<!-- ===== Navbar ===== -->
+<div class="navbar">
+  <!-- Botão voltar (mobile) -->
+  <button class="back-button" onclick="history.back()" aria-label="Voltar">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    <span>Voltar</span>
+  </button>
+
+  <div class="logo">EBEN<span>ÉZER</span></div>
+
+  <!-- Menu desktop -->
+  <nav id="mainNav" aria-label="Menu principal">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="produtos.html">Produtos</a></li>
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="contatos.html">Contatos</a></li>
+      <li><a href="conta-simples.html" aria-current="page">Conta</a></li>
+    </ul>
+  </nav>
+
+  <!-- Carrinho -->
+  <div class="nav-icon-container">
+    <a href="carrinho.html" aria-label="Ir para o carrinho">
+      <img src="./images/cart.png" alt="Carrinho">
+      <span id="cartCounter" class="cart-counter">0</span>
+    </a>
+  </div>
+</div>
+
+<!-- ===== Header ===== -->
+<header>
+  <h1>Minha Conta</h1>
+</header>
+
+<!-- ===== Conteúdo simples ===== -->
+<main class="container">
+  <section class="card stack" aria-label="Perfil">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#9cc7ff,#3a7bd5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;letter-spacing:.5px;">
+        CE
+      </div>
+      <div>
+        <h2 style="margin:0;font-size:1.1rem;">Dados do Perfil</h2>
+        <p class="helper" style="margin:.1rem 0 0;">Atualize suas informações básicas.</p>
+      </div>
+    </div>
+
+    <div class="stack" style="margin-top:.6rem">
+      <div>
+        <label for="nome">Nome</label>
+        <input id="nome" type="text" placeholder="Seu nome" value="Cliente Ebenezer">
+      </div>
+      <div>
+        <label for="email">E-mail</label>
+        <input id="email" type="email" placeholder="voce@exemplo.com" value="cliente@exemplo.com">
+      </div>
+      <div>
+        <label for="fone">Telefone</label>
+        <input id="fone" type="tel" inputmode="tel" placeholder="+55 (11) 99999-0000">
+      </div>
+    </div>
+
+    <div class="actions" style="margin-top:.4rem">
+      <button class="btn" type="button">Salvar</button>
+      <button class="btn btn-ghost" type="button">Cancelar</button>
+    </div>
+  </section>
+
+  <section class="stack" style="margin-top:1rem">
+    <details>
+      <summary>Alterar senha <span class="badge">opcional</span></summary>
+      <div class="stack" style="margin-top:.8rem">
+        <div>
+          <label for="senha-atual">Senha atual</label>
+          <input id="senha-atual" type="password" autocomplete="current-password">
+        </div>
+        <div>
+          <label for="senha-nova">Nova senha</label>
+          <input id="senha-nova" type="password" autocomplete="new-password">
+        </div>
+        <div>
+          <label for="senha-confirma">Confirmar nova senha</label>
+          <input id="senha-confirma" type="password" autocomplete="new-password">
+        </div>
+        <div class="actions">
+          <button class="btn" type="button">Atualizar senha</button>
+        </div>
+        <p class="helper">Dica: use pelo menos 8 caracteres, misturando letras, números e símbolos.</p>
+      </div>
+    </details>
+  </section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <h1>EBEN<span>ÉZER</span></h1>
+  <p>Nosso objetivo é ajudar pessoas a adquirir nossos produtos à distância</p>
+  <p>2025 - Todos os direitos reservados</p>
+</footer>
+
+<script>
+// contador do carrinho
+const cartCounter = document.getElementById('cartCounter');
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+cartCounter.textContent = cart.length;
+</script>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light">
+<title id="pageTitle">Detalhes do Produto — Ebenezer</title>
+
+<style>
+/* ===== Tokens ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#0084FF; --brand-2:#2AA7FF; --text:#1d1f23; --muted:#5a6578;
+  --bg:#f5f7fb; --surface:#ffffff; --radius:16px;
+  --shadow-sm:0 2px 10px rgba(0,0,0,.10); --shadow-md:0 10px 25px rgba(0,0,0,.16)
+}
+body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:1.25rem}
+
+/* Prefere redução de movimento */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+/* ===== Navbar ===== */
+.navbar{
+  position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:.9rem 1.25rem;background:rgba(0,0,0,.85);backdrop-filter:saturate(160%) blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 6px 22px rgba(0,0,0,.25);
+}
+.logo{font-size:1.9rem;font-weight:900;color:var(--brand)} .logo span{color:#fff}
+nav#mainNav{display:flex;align-items:center}
+nav#mainNav ul{display:flex;list-style:none;gap:1.6rem}
+nav#mainNav a{color:#fff;text-decoration:none;opacity:.95;font-weight:700;padding:.45rem .35rem;border-radius:10px}
+nav#mainNav a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+.menu-button{display:none;font-size:1.8rem;color:#fff;background:#111;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.2rem .55rem;cursor:pointer}
+.nav-overlay{display:none}
+@media (max-width:800px){
+  .menu-button{display:inline-flex}
+  nav#mainNav{
+    position:fixed;top:0;right:0;height:100dvh;width:min(86vw,360px);
+    background:#111;padding-top:78px;transform:translateX(100%);transition:transform .3s ease;box-shadow:-18px 0 32px rgba(0,0,0,.35);z-index:1002
+  }
+  nav#mainNav[aria-hidden="true"]{visibility:hidden}
+  nav#mainNav.show-menu{transform:translateX(0);visibility:visible}
+  nav#mainNav ul{flex-direction:column;gap:0}
+  nav#mainNav li{border-bottom:1px solid rgba(255,255,255,.08)}
+  nav#mainNav a{padding:1rem 1.25rem;width:100%}
+  .nav-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:1001}
+  .nav-overlay.active{opacity:1;pointer-events:auto}
+}
+.nav-right{display:flex;align-items:center;gap:.6rem;margin-left:auto}
+.nav-icon-container{display:flex;align-items:center;position:relative}
+.nav-icon-container img{width:36px;height:36px;filter:invert(1)}
+.cart-counter{ position:absolute;top:-6px;right:-6px;background:#ff3b3b;color:#fff;font-size:12px;padding:2px 6px;border-radius:999px;font-weight:800 }
+
+/* ===== Breadcrumbs + Voltar ===== */
+.breadcrumbs{display:flex;gap:.6rem;align-items:center;margin:1rem 0 .8rem;color:#5a6578;flex-wrap:wrap}
+.breadcrumbs a{color:#1d1f23;text-decoration:underline;text-underline-offset:3px}
+.backline{display:flex;align-items:center;gap:.6rem;margin:0 0 1rem}
+.back-btn{display:inline-flex;align-items:center;gap:.45rem;border:1px solid #e6ecfa;background:#fff;color:#0b60d6;font-weight:800;border-radius:12px;padding:.45rem .8rem;cursor:pointer}
+.back-btn:hover{filter:brightness(1.02)}
+
+/* ===== Layout Detalhes ===== */
+.product-detail{display:grid;gap:1.25rem;grid-template-columns: 1.15fr .85fr}
+@media (max-width:960px){.product-detail{grid-template-columns:1fr}}
+
+/* ===== Galeria ===== */
+.gallery{display:grid;gap:1rem;grid-template-columns: 108px 1fr;align-items:start}
+.thumbs{display:grid;gap:.6rem;grid-auto-rows:96px}
+.thumb{border-radius:12px;overflow:hidden;border:2px solid transparent;background:#fff;box-shadow:var(--shadow-sm);cursor:pointer}
+.thumb[aria-current="true"]{border-color:var(--brand)}
+.thumb img{width:100%;height:100%;object-fit:contain}
+.stage{border-radius:16px;overflow:hidden;background:#fff;border:1px solid #eef3ff;box-shadow:var(--shadow-md);padding:1rem;display:flex;align-items:center;justify-content:center;min-height:380px}
+.stage img{width:100%;max-height:520px;object-fit:contain}
+@media (max-width:960px){
+  .gallery{grid-template-columns:1fr}
+  .thumbs{grid-auto-flow:column;grid-auto-columns:96px;overflow:auto;padding-bottom:.25rem}
+  .stage{min-height:320px}
+}
+
+/* ===== Swatches (cores) ===== */
+.swatches{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.65rem}
+.swatch{width:30px;height:30px;border-radius:999px;border:2px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.15);cursor:pointer}
+.swatch[aria-selected="true"]{box-shadow:0 0 0 2px var(--brand), 0 0 0 4px #fff}
+.color-label{font-weight:800;margin-top:.25rem}
+
+/* ===== Info ===== */
+.product-info{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid #eef3ff;padding:1.1rem}
+.product-info h1{font-size:clamp(1.4rem,3.6vw,2rem);line-height:1.2}
+.price{font-size:1.85rem;font-weight:900;color:#0b60d6;margin:.35rem 0}
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:.65rem 1rem;border-radius:12px;border:1px solid #e9eefb;background:#fff;font-weight:800;cursor:pointer}
+.btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff}
+
+/* ===== Blocks ===== */
+.block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid #eef3ff;padding:1.1rem;margin-top:1.25rem}
+.block h2{font-size:1.2rem;margin-bottom:.6rem}
+.block ul{padding-left:1.1rem}
+.review{border-top:1px solid #eee;padding:.65rem 0}
+.review h3{font-size:1rem}
+
+/* ===== Not Found ===== */
+.notfound{padding:3rem 1.25rem;text-align:center}
+
+/* ===== Toast host ===== */
+#toastHost{position:fixed;inset:auto 0 16px 0;display:grid;place-items:center;gap:10px;pointer-events:none;z-index:9999}
+.toast{pointer-events:auto;max-width:92vw;padding:12px 16px;background:rgba(15,15,15,.92);color:#fff;border-radius:12px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);transform:translateY(12px);opacity:0;transition:transform .25s ease, opacity .25s ease}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ===== Navbar ===== -->
+<div class="navbar">
+  <a class="logo" href="index.html">EBEN<span>ÉZER</span></a>
+
+  <button class="menu-button" id="menuBtn" aria-label="Abrir menu" aria-controls="mainNav" aria-expanded="false">☰</button>
+
+  <nav id="mainNav" aria-label="Menu principal" aria-hidden="true">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="produtos.html">Produtos</a></li>
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="contatos.html">Contatos</a></li>
+      <li><a href="conta.html">Conta</a></li>
+    </ul>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+  <div class="nav-right">
+    <div class="nav-icon-container">
+      <a href="./carrinho.html" aria-label="Ir para o carrinho">
+        <img src="./images/cart.png" alt="Carrinho">
+        <span id="cartCounter" class="cart-counter">0</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Conteúdo ===== -->
+<main class="container" id="content" hidden>
+  <div class="backline">
+    <button id="btnBack" class="back-btn" type="button" aria-label="Voltar">← Voltar</button>
+  </div>
+
+  <nav class="breadcrumbs" aria-label="Você está em">
+    <a href="index.html">Início</a>
+    <span aria-hidden="true">›</span>
+    <a href="produtos.html">Produtos</a>
+    <span aria-hidden="true">›</span>
+    <span id="bcName">Detalhes</span>
+  </nav>
+
+  <section class="product-detail">
+    <!-- Galeria -->
+    <div id="galleryWrap">
+      <div class="gallery" aria-label="Galeria do produto" id="gallery">
+        <div class="thumbs" id="thumbs" role="tablist" aria-label="Ângulos"></div>
+        <div class="stage" id="stage"><img id="mainImage" src="" alt="" loading="lazy" decoding="async" /></div>
+      </div>
+      <div class="swatches" id="swatches" role="radiogroup" aria-label="Opções de cor"></div>
+      <div id="colorName" class="color-label"></div>
+    </div>
+
+    <!-- Informações -->
+    <div class="product-info">
+      <h1 id="prodName">—</h1>
+      <p id="prodDesc" class="description">—</p>
+      <div id="prodPrice" class="price">—</div>
+      <div class="actions">
+        <button class="btn primary" id="btnCart">Adicionar ao Carrinho</button>
+        <a class="btn" href="produtos.html" id="btnBackLink">Voltar para Produtos</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Especificações Técnicas</h2>
+    <ul id="specList"></ul>
+  </section>
+
+  <section class="block">
+    <h2>Avaliações dos Clientes</h2>
+    <div id="reviews"></div>
+  </section>
+</main>
+
+<section id="notFound" class="notfound" style="display:none" aria-live="polite">
+  <h1>Produto não encontrado</h1>
+  <p>Volte para a <a href="produtos.html">lista de produtos</a> e tente novamente.</p>
+</section>
+
+<div id="toastHost" aria-live="polite" aria-atomic="true"></div>
+
+<footer class="container" style="padding-bottom:2rem">
+  <p>&copy; 2025 Ebenezer Ecommerce. Todos os direitos reservados.</p>
+  <p><a href="./sobre.html">Sobre</a> • <a href="./contatos.html">Contato</a></p>
+</footer>
+
+<script>
+/* ===== Navbar mobile (acessível + focus trap) ===== */
+const menuBtn = document.getElementById('menuBtn');
+const nav = document.getElementById('mainNav');
+const overlay = document.getElementById('navOverlay');
+let _prevBodyOverflow = '';
+
+function lockScroll(){ _prevBodyOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; }
+function unlockScroll(){ document.body.style.overflow = _prevBodyOverflow || ''; }
+
+function toggleMenu(show){
+  const willOpen = typeof show==='boolean' ? show : !nav.classList.contains('show-menu');
+  nav.classList.toggle('show-menu', willOpen);
+  overlay.classList.toggle('active', willOpen);
+  menuBtn.setAttribute('aria-expanded', String(willOpen));
+  nav.setAttribute('aria-hidden', String(!willOpen));
+  if(willOpen){
+    lockScroll();
+    setTimeout(()=> nav.querySelector('a,button,[tabindex]:not([tabindex="-1"])')?.focus(), 0);
+  } else {
+    unlockScroll();
+    menuBtn.focus();
+  }
+}
+menuBtn?.addEventListener('click', ()=>toggleMenu());
+overlay?.addEventListener('click', ()=>toggleMenu(false));
+window.addEventListener('keydown', e=>{ if(e.key==='Escape') toggleMenu(false); });
+
+document.addEventListener('focusin', (e)=>{
+  if(!nav.classList.contains('show-menu')) return;
+  if(!nav.contains(e.target)){
+    nav.querySelector('a,button,[tabindex]:not([tabindex="-1"])')?.focus();
+  }
+});
+
+/* ===== Carrinho (badge) ===== */
+const cartCounter = document.getElementById('cartCounter');
+let cart = [];
+try{ cart = JSON.parse(localStorage.getItem('cart')||'[]'); }catch{}
+function updateCartCounter(){ if(cartCounter) cartCounter.textContent = cart.length; }
+updateCartCounter();
+
+/* ===== CATALOG: use nomes iguais às PASTAS ===== */
+const CATALOG = {
+  'Caixa de Som': {
+    sku:'sku-hmaston', name:'HMASTON (Caixa de Som)', price:160.00,
+    desc:'Caixa de som portátil com graves reforçados e bateria duradoura.',
+    specs:['Bluetooth 5.0','Entrada P2','Até 8h de bateria'],
+    reviews:[{author:'Ana', text:'Som alto e sem chiado.'}]
+  },
+  'Celulares': {
+    sku:'sku-celulares', name:'Celular X', price:1499.90,
+    desc:'Smartphone rápido para o dia a dia.',
+    specs:['Octa-core','128 GB','Tela 6,5"'],
+    reviews:[]
+  },
+  'headset': {
+    sku:'sku-kaidi', name:'KAIDI (Headset)', price:160.00,
+    desc:'Headset confortável para longas sessões, microfone nítido.',
+    specs:['Drivers 50mm','Compatível PC/Console','Cabo reforçado'],
+    reviews:[{author:'Rafa', text:'Ótimo custo-benefício.'}]
+  },
+  'Mouses': {
+    sku:'sku-mouse', name:'Mouse Gamer', price:279.90,
+    desc:'Sensor de alta precisão e shape confortável.',
+    specs:['Até 26.000 DPI','6 botões','Cabo flexível'],
+    reviews:[]
+  },
+  'Películas': {
+    sku:'sku-pelicula', name:'Película 6.5"', price:29.90,
+    desc:'Proteção contra riscos e impactos.',
+    specs:['Vidro temperado','Alta transparência'],
+    reviews:[]
+  },
+  'smartwatch': {
+    sku:'sku-swfit', name:'Smartwatch Fit 5ATM', price:699.90,
+    desc:'GPS, resistência 5ATM e bateria para vários dias.',
+    specs:['GPS + GLONASS','Monitoramento FC/SpO2','5ATM'],
+    reviews:[]
+  },
+  'Tablets': {
+    sku:'sku-tablet', name:'Tablet Y', price:1199.90,
+    desc:'Perfeito para estudos e entretenimento.',
+    specs:['10" Full HD','Wi-Fi','64 GB'],
+    reviews:[]
+  }
+};
+
+/* ===== VARIANTS: pasta/cor/ângulos iguais aos seus diretórios ===== */
+const VARIANTS = {
+  'Caixa de Som': { alt:'Caixa de Som HMASTON', colors:[{key:'Branco',label:'Branco',hex:'#EDEDED'}], angles:['1','2','3'] },
+  'Celulares':    { alt:'Celular',              colors:[{key:'Preto',label:'Preto',hex:'#111'}],          angles:['1'] },
+  'headset':      { alt:'Headset',              colors:[{key:'preto',label:'Preto',hex:'#111'}],          angles:['1'] },
+  'Mouses':       { alt:'Mouse',                colors:[{key:'Preto',label:'Preto',hex:'#111'}],          angles:['1'] },
+  'Películas':    { alt:'Película',             colors:[{key:'Transparente',label:'Transparente',hex:'#d9d9d9'}], angles:['1'] },
+  'smartwatch':   { alt:'Smartwatch',           colors:[{key:'preto',label:'Preto',hex:'#111'}],          angles:['1'] },
+  'Tablets':      { alt:'Tablet',               colors:[{key:'Preto',label:'Preto',hex:'#111'}],          angles:['1'] }
+};
+
+/* ===== Normalizador: aceita id com/sem espaço/acentos ===== */
+function norm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,''); }
+const CANON = {};
+Object.keys(VARIANTS).forEach(k => CANON[norm(k)] = k);
+CANON['caixadesom'] = 'Caixa de Som';   // alias extra
+CANON['peliculas']  = 'Películas';      // alias extra
+
+/* ===== Imagens com fallback de extensão e encoding por segmento ===== */
+const IMG_BASE = './img';
+const IMG_EXTS = ['webp','jpg','jpeg','png','JPG','JPEG','PNG','WEBP'];
+function setVariantImage(imgEl, dirName, colorKey, angleName, altBase){
+  let i=0;
+  function tryNext(){
+    if(i>=IMG_EXTS.length){ imgEl.onerror=null; return; }
+    const url = `${IMG_BASE}/${encodeURIComponent(dirName)}/${encodeURIComponent(colorKey)}/${encodeURIComponent(angleName)}.${IMG_EXTS[i++]}`;
+    imgEl.onerror = tryNext;
+    imgEl.src = url;
+    imgEl.alt = `${altBase} — cor ${colorKey}, ângulo ${angleName}`;
+    imgEl.loading = 'lazy';
+    imgEl.decoding = 'async';
+  }
+  tryNext();
+}
+
+const fmtBR = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const $ = id => document.getElementById(id);
+function clear(el){ while(el && el.firstChild) el.removeChild(el.firstChild); }
+
+/* ===== Toast ===== */
+const toastHost = document.getElementById('toastHost');
+function showToast(msg=''){
+  if(!msg) return; const t = document.createElement('div'); t.className='toast'; t.textContent = msg; toastHost.appendChild(t);
+  requestAnimationFrame(()=> t.classList.add('show'));
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(), 220); }, 1500);
+}
+
+/* ===== Init ===== */
+(function init(){
+  const params = new URLSearchParams(location.search);
+  const rawId = (params.get('id')||'').trim();
+  const idKey = CANON[norm(rawId)] || rawId;      // resolve “Caixa de Som”, “caixadesom”, etc.
+  const colorParam = (params.get('color')||'').trim();
+  const angleParam = (params.get('angle')||'').trim();
+
+  const data = CATALOG[idKey];
+  const variant = VARIANTS[idKey];
+
+  if(!data || !variant){ document.getElementById('notFound').style.display='block'; return; }
+
+  document.getElementById('content').hidden = false;
+  document.title = `${data.name} — Detalhes | Ebenezer`;
+  $('bcName').textContent = data.name;
+
+  // Voltar inteligente
+  $('btnBack').addEventListener('click', ()=>{
+    if(document.referrer && /produtos\.html/i.test(document.referrer)) history.back();
+    else location.href = 'produtos.html';
+  });
+
+  // Textos
+  $('prodName').textContent = data.name;
+  $('prodDesc').textContent = data.desc;
+  $('prodPrice').textContent = fmtBR(Number(data.price));
+
+  // Specs
+  const ul = $('specList'); clear(ul);
+  (data.specs||[]).forEach(s=>{ const li=document.createElement('li'); li.textContent=s; ul.appendChild(li); });
+
+  // Reviews
+  const revBox = $('reviews'); clear(revBox);
+  if(!data.reviews?.length){ revBox.innerHTML = '<p>Seja o primeiro a avaliar este produto.</p>'; }
+  else data.reviews.forEach(r=>{ const art=document.createElement('article'); art.className='review'; art.innerHTML=`<h3>${r.author}</h3><p>${r.text}</p>`; revBox.appendChild(art); });
+
+  // Galeria + swatches
+  const thumbs = $('thumbs');
+  const stageImg = $('mainImage');
+  const swWrap = $('swatches');
+  const colorName = $('colorName');
+
+  let color = (variant.colors.find(c=>c.key===colorParam)?.key) || variant.colors[0].key;
+  let angle = (variant.angles.includes(angleParam) ? angleParam : variant.angles[0]);
+
+  // swatches
+  clear(swWrap);
+  variant.colors.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.className='swatch'; b.style.background=c.hex; b.title=c.label; b.setAttribute('role','radio'); b.dataset.color=c.key;
+    if(c.key===color || (!color && i===0)) b.setAttribute('aria-selected','true');
+    b.addEventListener('click', ()=>{
+      swWrap.querySelectorAll('.swatch').forEach(x=>x.removeAttribute('aria-selected'));
+      b.setAttribute('aria-selected','true');
+      color = c.key; angle = variant.angles[0];
+      colorName.textContent = `Cor: ${c.label}`;
+      buildThumbs(idKey, color);
+      setStage(idKey, color, angle, { transition: true });
+      const u=new URL(location.href); u.searchParams.set('color', color); u.searchParams.set('angle', angle); history.replaceState(null,'',u);
+    });
+    swWrap.appendChild(b);
+  });
+  colorName.textContent = `Cor: ${(variant.colors.find(x=>x.key===color)||variant.colors[0]).label}`;
+
+  function buildThumbs(pid, colorKey){
+    clear(thumbs);
+    variant.angles.forEach((ang, idx)=>{
+      const btn = document.createElement('button');
+      btn.className='thumb';
+      btn.setAttribute('role','tab');
+      btn.setAttribute('aria-label', `Ângulo ${ang}`);
+      if(idx===0) btn.setAttribute('aria-current','true');
+      const img = document.createElement('img');
+      setVariantImage(img, pid, colorKey, ang, variant.alt || data.name);
+      btn.appendChild(img);
+      btn.addEventListener('click', ()=>{
+        thumbs.querySelectorAll('.thumb').forEach(x=>x.removeAttribute('aria-current'));
+        btn.setAttribute('aria-current','true');
+        angle = ang;
+        setStage(pid, colorKey, ang, { transition: true });
+        const u=new URL(location.href); u.searchParams.set('angle', ang); history.replaceState(null,'',u);
+      });
+      thumbs.appendChild(btn);
+    });
+
+    // Navegação por teclado (setas) entre thumbs
+    thumbs.addEventListener('keydown', (e)=>{
+      const items = Array.from(thumbs.querySelectorAll('.thumb'));
+      const current = document.activeElement;
+      const idx = items.indexOf(current);
+      if(idx<0) return;
+      if(e.key==='ArrowRight' || e.key==='ArrowDown'){ e.preventDefault(); items[(idx+1)%items.length].focus(); }
+      if(e.key==='ArrowLeft'  || e.key==='ArrowUp'){   e.preventDefault(); items[(idx-1+items.length)%items.length].focus(); }
+      if(e.key==='Home'){ e.preventDefault(); items[0].focus(); }
+      if(e.key==='End'){  e.preventDefault(); items[items.length-1].focus(); }
+    }, { once: true });
+  }
+
+  function setStage(pid, colorKey, ang, opts={}){
+    const apply = () => setVariantImage(stageImg, pid, colorKey, ang, variant.alt || data.name);
+    // Transição suave quando compatível
+    if(opts.transition && document.startViewTransition){
+      document.startViewTransition(apply);
+    } else {
+      apply();
+    }
+  }
+
+  buildThumbs(idKey, color);
+  setStage(idKey, color, angle);
+
+  // Carrinho
+  document.getElementById('btnCart').addEventListener('click', ()=>{
+    const item = {
+      id: idKey,
+      sku: data.sku,
+      name: `${data.name} (${color})`,
+      price: Number(data.price)||0,
+      image: stageImg.src,
+      color,
+      qty: 1
+    };
+    cart.push(item);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCounter();
+    showToast(`${item.name} adicionado ao carrinho!`);
+  });
+})();
+</script>
+</body>
+</html>

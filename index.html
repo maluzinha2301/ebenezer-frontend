@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light">
+<title>Ebenezer Ecommerce</title>
+
+<style>
+/* ===== Reset e Tokens ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#0084FF; --brand-2:#2AA7FF;
+  --text:#1d1f23; --muted:#5a6578;
+  --bg:#f5f7fb; --surface:#ffffff;
+  --radius:16px; --shadow-sm:0 2px 10px rgba(0,0,0,.10); --shadow-md:0 10px 25px rgba(0,0,0,.16);
+}
+html,body{height:100%}
+body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+
+/* Prefere redução de movimento */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+ /* ===== Navbar ===== */
+.navbar{position:sticky;top:0;z-index:1000;background:#000;color:#fff;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:.9rem 1.1rem;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.logo{font-weight:900;letter-spacing:.3px;font-size:1.9rem;color:var(--brand)}
+.logo span{color:#fff}
+nav#mainNav{display:flex;align-items:center}
+nav#mainNav ul{display:flex;list-style:none;gap:1.3rem}
+nav#mainNav a{color:#fff;opacity:.95;font-weight:600;padding:.45rem .35rem;border-radius:10px}
+nav#mainNav a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+.menu-button{display:none;font-size:1.6rem;color:#fff;background:#111;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.2rem .55rem;cursor:pointer}
+.nav-overlay{display:none}
+.nav-right{display:flex;align-items:center;gap:.6rem}
+.nav-icon-container{position:relative;display:flex;align-items:center}
+.nav-icon-container img{width:36px;height:36px;filter:invert(1)}
+.cart-counter{position:absolute;top:-6px;right:-6px;background:#ff3b3b;color:#fff;border-radius:999px;padding:2px 6px;font-size:12px;font-weight:800}
+
+@media (max-width:880px){
+  .menu-button{display:inline-flex}
+  nav#mainNav{position:fixed;top:0;right:0;height:100dvh;width:min(86vw,360px);background:#111;padding:78px 1rem 1rem;transform:translateX(100%);transition:transform .28s ease;box-shadow:-18px 0 32px rgba(0,0,0,.35);z-index:1002}
+  nav#mainNav[aria-hidden="true"]{visibility:hidden}
+  nav#mainNav ul{flex-direction:column;gap:0}
+  nav#mainNav li{border-bottom:1px solid rgba(255,255,255,.08)}
+  nav#mainNav a{display:block;padding:1rem}
+  nav#mainNav.show-menu{transform:translateX(0);visibility:visible}
+  .nav-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .28s ease;z-index:1001}
+  .nav-overlay.active{opacity:1;pointer-events:auto}
+}
+
+/* ===== Hero ===== */
+header.hero{
+  position:relative;isolation:isolate;overflow:hidden;color:#fff;text-align:center;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(0,209,255,.18), transparent 60%),
+    radial-gradient(800px 500px at 100% 0, rgba(0,132,255,.15), transparent 60%),
+    linear-gradient(135deg,#103a63,#0f6d8c);
+  padding:clamp(2rem,5vw,3rem) 1rem;
+}
+.hero-inner{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2rem}
+.hero-left{flex:1;min-width:280px;text-align:left}
+.hero-left h2{font-size:clamp(1.8rem,4vw,3rem);margin-bottom:.8rem;text-shadow:0 6px 22px rgba(0,0,0,.35)}
+.hero-left p{margin-bottom:1.2rem;opacity:.96}
+.hero-left .cta{padding:.85rem 2.2rem;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:linear-gradient(90deg,#fff,#e9f3ff);color:#0b60d6;font-weight:800;cursor:pointer;box-shadow:var(--shadow-md)}
+.hero-right{flex:1;min-width:280px;display:flex;justify-content:center}
+.hero-right img{width:100%;max-width:480px;border-radius:18px;box-shadow:0 14px 40px rgba(0,0,0,.35);background:#0d2a44}
+
+/* ===== Busca ===== */
+#searchInput{display:block;margin:2rem auto 0;padding:.7rem 1rem;width:min(92%,540px);border:2px solid #d7e6ff;border-radius:12px;font-size:1rem;outline:none;transition:.2s;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.05)}
+#searchInput:focus{border-color:#8abaff;box-shadow:0 0 0 4px rgba(0,132,255,.14)}
+
+/* ===== Produtos (menos itens aqui) ===== */
+.cols{display:grid;gap:1.5rem;padding:2rem;max-width:1200px;margin:0 auto}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:1024px){.cols-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.cols-3{grid-template-columns:1fr}}
+
+.card{background:var(--surface);border-radius:var(--radius);padding:1rem;box-shadow:var(--shadow-sm);border:1px solid #eef3ff;display:flex;flex-direction:column;gap:.65rem}
+.card .media{border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#fff,#f3f7ff)}
+.card img{width:100%;aspect-ratio:4/3;object-fit:contain}
+.card .title{font-weight:900}
+.card .price{font-weight:900;color:#0b60d6}
+.card .old{margin-left:.35rem;color:#8a97a9;text-decoration:line-through;font-weight:600}
+.actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:.65rem 1rem;border-radius:12px;border:1px solid #e9eefb;background:#fff;font-weight:800;cursor:pointer}
+.btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff}
+.more-link{display:block;text-align:center;margin:-.5rem auto 2rem}
+.more-link .btn{padding:.75rem 1.4rem}
+
+/* ===== Toast host ===== */
+#toastHost{position:fixed;inset:auto 0 16px 0;display:grid;place-items:center;gap:10px;pointer-events:none;z-index:9999}
+.toast{pointer-events:auto;max-width:92vw;padding:12px 16px;background:rgba(15,15,15,.92);color:#fff;border-radius:12px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);transform:translateY(12px);opacity:0;transition:transform .25s ease, opacity .25s ease}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ===== Footer ===== */
+footer{background:#000;color:#fff;padding:2rem;text-align:center;border-top:1px solid rgba(255,255,255,.08)}
+footer ul{list-style:none;display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+footer a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.15);padding:.45rem .8rem;border-radius:10px}
+footer a:hover{text-decoration:underline}
+
+/* ===== Responsivo ===== */
+@media (max-width:980px){ .cols-2{grid-template-columns:1fr} .hero .content{grid-template-columns:1fr} }
+@media (max-width:740px){ .kpis{grid-template-columns: repeat(2,1fr)} .cols-3{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+ <!-- ===== Navbar ===== -->
+  <div class="navbar">
+    <button class="menu-button" id="menuBtn" aria-label="Abrir menu" aria-controls="mainNav" aria-expanded="false">☰</button>
+    <a class="logo" href="index.html">EBEN<span>ÉZER</span></a>
+    <nav id="mainNav" aria-label="Menu principal" aria-hidden="true">
+      <ul role="tablist">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="produtos.html">Produtos</a></li>
+        <li><a href="sobre.html" aria-current="page">Sobre</a></li>
+        <li><a href="contatos.html">Contatos</a></li>
+        <li><a href="conta.html">Conta</a></li>
+      </ul>
+    </nav>
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+    <div class="nav-right">
+      <!-- Botão de tema é injetado por ebz-theme.js -->
+      <div class="nav-icon-container">
+        <a href="carrinho.html" aria-label="Ir para o carrinho">
+          <img src="./images/cart.png" alt="Carrinho" />
+          <span id="cartCounter" class="cart-counter">0</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <h2>Tecnologia de Qualidade e Preço Justo</h2>
+      <p>Os eletrônicos que você procura, com envio rápido e suporte humano de verdade.</p>
+      <button class="cta" onclick="location.href='produtos.html'">Ver catálogo completo →</button>
+    </div>
+    <div class="hero-right">
+      <img src="./images/gaming-msi-header.png" alt="Notebook gamer em destaque">
+    </div>
+  </div>
+</header>
+
+<!-- Busca -->
+<main>
+  <input type="text" id="searchInput" placeholder="🔍 Pesquise um produto..." aria-label="Pesquisar produtos">
+  <div class="cols cols-3" id="grid"></div>
+  <div class="more-link"><a class="btn" href="produtos.html">Ver todos os produtos</a></div>
+</main>
+
+<div id="toastHost" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Footer -->
+<footer>
+  <h1>EBEN<span>ÉZER</span></h1>
+  <p>Nosso objetivo é ajudar pessoas a adquirir nossos produtos à distância</p>
+  <ul>
+    <li><a href="https://wa.me/5511967040951" target="_blank" rel="noopener">WhatsApp</a></li>
+    <li><a href="https://www.instagram.com/ebenezerassistencia" target="_blank" rel="noopener">Instagram</a></li>
+    <li><a href="https://www.tiktok.com/@ebenzer.assistnci" target="_blank" rel="noopener">TikTok</a></li>
+  </ul>
+  <p>2025 - Todos os direitos reservados</p>
+</footer>
+
+<script>
+const IMG_BASE = './img';
+const IMG_EXTS = ['webp','jpg','jpeg','png','JPG','JPEG','PNG','WEBP'];
+
+function setVariantImage(imgEl, productId, colorKey, angleName, altBase){
+  let i = 0;
+  function tryNext(){
+    if(i >= IMG_EXTS.length) return;
+    const url = `${IMG_BASE}/${productId}/${colorKey}/${angleName}.${IMG_EXTS[i++]}`;
+    imgEl.onerror = tryNext;
+    imgEl.src = url;
+    imgEl.alt = `${altBase || productId} — cor ${colorKey}, ângulo ${angleName}`;
+    imgEl.loading = 'lazy';
+    imgEl.decoding = 'async';
+  }
+  tryNext();
+}
+</script>
+
+<script>
+/* ===== Dados dos produtos (compartilhado entre páginas) ===== */
+
+/* ADICIONADO: base da API + loader do catálogo */
+const API_BASE = 'http://localhost:3000/api/v1';
+async function loadCatalog(){
+  const r = await fetch(`${API_BASE}/catalog`, { headers: { 'Accept': 'application/json' } });
+  if(!r.ok) throw new Error('Falha ao carregar catálogo');
+  const data = await r.json();
+  PRODUCTS = Array.isArray(data.products) ? data.products : [];
+  VARIANTS = (data.variants && typeof data.variants === 'object') ? data.variants : {};
+}
+
+/* ALTERADO (apenas isso): agora é let para poder receber do backend */
+let VARIANTS = {
+  notebook:  { altBase:'Notebook Gamer X',        colors:[{key:'preto',hex:'#111'},{key:'prata',hex:'#C0C0C0'}], angles:['1','2','3'] },
+  headset:   { altBase:'Headset Pro 7.1 ANC',     colors:[{key:'preto',hex:'#111'},{key:'branco',hex:'#EDEDED'}], angles:['1','2','3'] },
+  smartwatch:{ altBase:'Smartwatch Fit 5ATM',     colors:[{key:'preto',hex:'#111'},{key:'azul',hex:'#1C7ED6'},{key:'rosa',hex:'#FF5C8A'}], angles:['1','2','3'] },
+  teclado:   { altBase:'Teclado Mecânico TKL',    colors:[{key:'preto',hex:'#111'},{key:'branco',hex:'#EDEDED'}], angles:['1','2','3'] },
+  mouse:     { altBase:'Mouse Gamer 8K',          colors:[{key:'preto',hex:'#111'},{key:'branco',hex:'#EDEDED'},{key:'vermelho',hex:'#E11D48'}], angles:['1','2','3'] },
+  monitor:   { altBase:'Monitor 27” 144Hz',       colors:[{key:'preto',hex:'#111'}], angles:['1','2','3'] }
+};
+
+let PRODUCTS = [
+  // Variantes
+  {id:'notebook',  sku:'sku-notebook',  nome:'Notebook Gamer X',       preco:8499.90, oldPrice:8999.90, badge:'Novo'},
+  {id:'headset',   sku:'sku-headset',   nome:'Headset Pro 7.1 ANC',    preco:499.90},
+  {id:'smartwatch',sku:'sku-smartwatch',nome:'Smartwatch Fit 5ATM',    preco:699.90},
+  {id:'monitor',   sku:'sku-monitor',   nome:'Monitor 27” 144Hz QHD',  preco:1899.90},
+
+  // Sem variantes (usam imagem simples)
+  {id:'hub-usb',     sku:'sku-hub-usb',     nome:'Hub USB-C 7 em 1',          preco:199.90, image:'./images/products/product-11.png'},
+  {id:'ssd-nvme',    sku:'sku-ssd-nvme',    nome:'SSD NVMe 1TB PCIe 4.0',     preco:429.90, image:'./images/products/product-12.png'},
+];
+
+const FEATURED_IDS = ['notebook','headset','smartwatch','monitor','hub-usb','ssd-nvme'];
+
+/* ===== Navbar mobile (sincronizada com app.js modernizado) ===== */
+const menuBtn = document.getElementById('menuBtn');
+const nav = document.getElementById('mainNav');
+const overlay = document.getElementById('navOverlay');
+let _prevBodyOverflow = '';
+
+function lockScroll(){ _prevBodyOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; }
+function unlockScroll(){ document.body.style.overflow = _prevBodyOverflow || ''; }
+
+function toggleMenu(show){
+  const willOpen = typeof show==='boolean' ? show : !nav.classList.contains('show-menu');
+  nav.classList.toggle('show-menu', willOpen);
+  overlay.classList.toggle('active', willOpen);
+  menuBtn.setAttribute('aria-expanded', String(willOpen));
+  nav.setAttribute('aria-hidden', String(!willOpen));
+  if(willOpen){ lockScroll(); setTimeout(()=>{ nav.querySelector('a,button,[tabindex]:not([tabindex="-1"])')?.focus(); }, 0); }
+  else { unlockScroll(); menuBtn.focus(); }
+}
+menuBtn?.addEventListener('click', ()=>toggleMenu());
+overlay?.addEventListener('click', ()=>toggleMenu(false));
+window.addEventListener('keydown', e=>{ if(e.key==='Escape') toggleMenu(false); });
+
+document.addEventListener('focusin', (e)=>{
+  if(!nav.classList.contains('show-menu')) return;
+  if(!nav.contains(e.target)){
+    nav.querySelector('a,button,[tabindex]:not([tabindex="-1"])')?.focus();
+  }
+});
+
+/* ===== Carrinho ===== */
+const cartCounter = document.getElementById('cartCounter');
+let cart = [];
+try{ cart = JSON.parse(localStorage.getItem('cart') || '[]'); }catch{}
+function updateCartCounter(){ if(cartCounter) cartCounter.textContent = cart.length; }
+updateCartCounter();
+
+/* ===== Helpers ===== */
+const slug = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+const fmtBR = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+/* ===== Toast ===== */
+const toastHost = document.getElementById('toastHost');
+function showToast(msg=''){
+  if(!msg) return; const t = document.createElement('div'); t.className='toast'; t.textContent = msg; toastHost.appendChild(t);
+  requestAnimationFrame(()=> t.classList.add('show'));
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(), 220); }, 1500);
+}
+
+/* ===== Render (apenas destaques no index) ===== */
+const grid = document.getElementById('grid');
+function cardHTML(p){
+  const desconto = p.oldPrice && p.oldPrice>p.preco;
+  return `
+  <article class="card" data-id="${p.id}">
+    <figure class="media"><img alt="${p.nome}" loading="lazy" decoding="async"></figure>
+    <div class="title">${p.nome}</div>
+    <div><span class="price">${fmtBR(p.preco)}</span> ${desconto?`<span class="old">${fmtBR(p.oldPrice)}</span>`:''}</div>
+    <div class="actions">
+      <button class="btn primary" data-add="${p.sku}">Adicionar</button>
+      <a class="btn" data-details href="produto-detalhes-ebenezer.html?id=${p.id}">Detalhes</a>
+    </div>
+  </article>`;
+}
+function mount(products){
+  grid.innerHTML = products.map(cardHTML).join('');
+  // imagens
+  grid.querySelectorAll('.card').forEach(card=>{
+    const id = card.dataset.id;
+    const p = PRODUCTS.find(x=>x.id===id);
+    const img = card.querySelector('img');
+    if(VARIANTS[id]){
+      const color = VARIANTS[id].colors[0].key;
+      const ang = VARIANTS[id].angles[0];
+      img.src = `./img/${id}/${color}/${ang}.jpg`;
+      img.alt = `${p.nome} — cor ${color}`;
+      const a = card.querySelector('[data-details]');
+      a.addEventListener('click', ()=>{
+        a.href = `produto-detalhes-ebenezer.html?id=${id}&color=${encodeURIComponent(color)}`;
+      });
+    } else {
+      img.src = p.image || './images/products/product-4.png';
+    }
+  });
+  // add-to-cart
+  grid.querySelectorAll('[data-add]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const sku = btn.getAttribute('data-add');
+      const p = PRODUCTS.find(x=>x.sku===sku);
+      cart.push({sku, name:p.nome, price:p.preco, qty:1});
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCounter();
+      showToast(`${p.nome} adicionado ao carrinho!`);
+    });
+  });
+}
+
+/* ALTERADO (apenas isso): ao invés de montar direto, carregamos do backend e depois montamos */
+(async () => {
+  try{
+    await loadCatalog();
+  }catch(err){
+    console.error(err);
+    showToast('Não foi possível carregar produtos do servidor.');
+  }
+  mount(PRODUCTS.filter(p=>FEATURED_IDS.includes(p.id)));
+})();
+
+/* ===== Busca (filtra destaques por nome/slug) ===== */
+const searchInput = document.getElementById('searchInput');
+searchInput?.addEventListener('input', e=>{
+  const term = slug(e.target.value);
+  const base = PRODUCTS.filter(p=>FEATURED_IDS.includes(p.id));
+  const result = !term ? base : base.filter(p=>{
+    const hay = slug(p.nome)+' '+p.id+' '+(p.sku||'');
+    return hay.includes(term);
+  });
+  mount(result);
+});
+</script>
+</body>
+</html>

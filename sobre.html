@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sobre — Ebenezer Ecommerce</title>
+  <meta name="description" content="Conheça a história, missão e valores da Ebenezer. Tecnologia de qualidade com preço justo e atendimento humano." />
+  <link rel="preload" href="./images/cart.png" as="image" />
+  <script src="./js/ebz-theme.js" defer></script>
+  <style>
+    /* ===== Reset & Tokens ===== */
+    *,*::before,*::after{box-sizing:border-box}
+    :root{
+      --brand:#0084FF;           /* azul Ebenezer */
+      --brand-2:#00D1FF;         /* azul ciano para efeitos */
+      --text:#1d1f23;            /* texto padrão */
+      --muted:#677185;           /* texto secundário */
+      --bg:#f5f7fb;              /* fundo neutro */
+      --surface:#ffffff;         /* cartões */
+      --radius:16px;
+      --radius-sm:12px;
+      --radius-lg:22px;
+      --elev:0 10px 30px rgba(0,0,0,.08);
+      --ring:0 0 0 3px rgba(0,132,255,.15);
+      --maxw:1200px;
+    }
+    html,body{height:100%}
+    body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    img{max-width:100%;display:block}
+    a{color:inherit;text-decoration:none}
+
+    /* ===== Navbar ===== */
+    .navbar{position:sticky;top:0;z-index:1000;background:#000;color:#fff;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:.9rem 1.1rem;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+    .logo{font-weight:900;letter-spacing:.3px;font-size:1.9rem;color:var(--brand)}
+    .logo span{color:#fff}
+    nav#mainNav{display:flex;align-items:center}
+    nav#mainNav ul{display:flex;list-style:none;gap:1.3rem}
+    nav#mainNav a{color:#fff;opacity:.95;font-weight:600;padding:.45rem .35rem;border-radius:10px}
+    nav#mainNav a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+    .menu-button{display:none;font-size:1.6rem;color:#fff;background:#111;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.2rem .55rem;cursor:pointer}
+    .nav-overlay{display:none}
+    .nav-right{display:flex;align-items:center;gap:.6rem}
+    .nav-icon-container{position:relative;display:flex;align-items:center}
+    .nav-icon-container img{width:36px;height:36px;filter:invert(1)}
+    .cart-counter{position:absolute;top:-6px;right:-6px;background:#ff3b3b;color:#fff;border-radius:999px;padding:2px 6px;font-size:12px;font-weight:800}
+
+    @media (max-width:880px){
+      .menu-button{display:inline-flex}
+      nav#mainNav{position:fixed;top:0;right:0;height:100dvh;width:min(86vw,360px);background:#111;padding:78px 1rem 1rem;transform:translateX(100%);transition:transform .28s ease;box-shadow:-18px 0 32px rgba(0,0,0,.35);z-index:1002}
+      nav#mainNav ul{flex-direction:column;gap:0}
+      nav#mainNav li{border-bottom:1px solid rgba(255,255,255,.08)}
+      nav#mainNav a{display:block;padding:1rem}
+      nav#mainNav.show-menu{transform:translateX(0)}
+      .nav-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .28s ease;z-index:1001}
+      .nav-overlay.active{opacity:1;pointer-events:auto}
+    }
+
+    /* ===== Hero ===== */
+    .hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(1200px 600px at 10% -10%, rgba(0,209,255,.18), transparent 60%), radial-gradient(800px 500px at 100% 0, rgba(0,132,255,.15), transparent 60%), linear-gradient(135deg,#103a63,#0f6d8c);color:#fff}
+    .shell{max-width:var(--maxw);margin:0 auto;padding: clamp(1.6rem, 2vw + 1.2rem, 2.2rem) 1rem}
+    .hero .content{display:grid;grid-template-columns: 1.1fr .9fr;gap:1.5rem;align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px);padding:.25rem .6rem;border-radius:999px;font-weight:700;letter-spacing:.2px}
+    .hero h1{font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3rem);line-height:1.15;margin:.7rem 0 .4rem;text-shadow:0 6px 22px rgba(0,0,0,.35)}
+    .hero p{opacity:.96}
+    .cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.1rem}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;border:1px solid transparent;border-radius:999px;padding:.75rem 1.15rem;font-weight:800;cursor:pointer;box-shadow:var(--elev);transition:filter .15s ease, transform .1s ease}
+    .btn:hover{filter:brightness(1.05)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:linear-gradient(90deg,var(--brand),#2aa7ff);color:#fff}
+    .btn.ghost{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
+    .art{position:relative}
+    .blob{position:absolute;inset:auto -20% -20% auto;width:320px;height:320px;background:radial-gradient(circle at 30% 30%, var(--brand-2), transparent 60%);filter:blur(32px);opacity:.7;z-index:0}
+    .hero-card{position:relative;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);border-radius:var(--radius-lg);padding:1rem;z-index:1}
+
+    /* KPIs flutuantes */
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.4rem}
+    .kpi{background:var(--surface);color:#0e1a2b;border-radius:var(--radius);padding:1rem;text-align:center;box-shadow:var(--elev)}
+    .kpi .num{font-weight:900;font-size:1.5rem;color:#0b60d6}
+    .kpi .lbl{color:#4c5a71}
+
+    /* ===== Seções ===== */
+    .section{padding: clamp(2rem, 4vw, 3rem) 1rem}
+    .title{font-size: clamp(1.5rem, 1rem + 1.6vw, 2.1rem);margin-bottom:.6rem}
+    .subtitle{color:var(--muted);max-width:68ch}
+    .grid{display:grid;gap:1rem}
+    .cols-2{grid-template-columns:1.1fr .9fr}
+    .cols-3{grid-template-columns:repeat(3,1fr)}
+
+    .card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--elev);padding:1.1rem}
+
+    .values{display:grid;gap:.8rem;margin-top:.8rem}
+    .value{display:flex;gap:.8rem;align-items:flex-start;background:linear-gradient(180deg,#fff, #f7f9ff);border-radius:var(--radius);padding:1rem;border:1px solid #eef3ff}
+    .value i{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:rgba(0,132,255,.12);border:1px solid rgba(0,132,255,.25)}
+
+    /* Linha do tempo */
+    .timeline{position:relative;margin-top:1rem}
+    .timeline::before{content:"";position:absolute;left:14px;top:0;bottom:0;width:2px;background:#d9e2ff}
+    .titem{position:relative;padding-left:2.6rem;margin-bottom:1rem}
+    .titem::before{content:"";position:absolute;left:6px;top:.25rem;width:18px;height:18px;border-radius:999px;background:linear-gradient(180deg, var(--brand), #4fb4ff);box-shadow:0 0 0 3px rgba(0,132,255,.18)}
+    .titem h3{margin:0 0 .25rem}
+    .titem p{color:var(--muted)}
+
+    /* Features */
+    .feature{display:flex;gap:.8rem;align-items:flex-start;padding:1rem;border:1px dashed #e1e8ff;border-radius:var(--radius-sm)}
+    .feature i{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#eef5ff}
+
+    /* Depoimentos (scroll-snap) */
+    .carousel{display:flex;gap:1rem;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:.4rem}
+    .tcard{min-width:280px;max-width:360px;scroll-snap-align:start;background:var(--surface);border-radius:var(--radius);box-shadow:var(--elev);padding:1rem}
+    .person{display:flex;align-items:center;gap:.6rem}
+    .avatar{width:42px;height:42px;border-radius:999px;background:linear-gradient(135deg,#8acbff,#e1f1ff);border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .stars{color:#ffb400}
+    .car-nav{display:flex;gap:.6rem;justify-content:flex-end;margin:.5rem 0}
+    .car-nav button{border:1px solid #dce6ff;background:#fff;border-radius:10px;padding:.35rem .55rem;cursor:pointer}
+
+    /* FAQ (details/summary nativo) */
+    .faq{display:grid;gap:.6rem}
+    details{background:var(--surface);border-radius:var(--radius);box-shadow:var(--elev)}
+    summary{cursor:pointer;list-style:none;padding:.9rem 1.1rem;font-weight:700}
+    summary::-webkit-details-marker{display:none}
+    details>div{padding:0 1.1rem 1rem;color:var(--muted)}
+
+    /* CTA final */
+    .cta-final{position:relative;overflow:hidden;background:linear-gradient(135deg,#0b60d6,#0f90c1);color:#fff;border-radius:var(--radius-lg)}
+    .cta-final .inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;padding:1.4rem}
+    .cta-final .btn{box-shadow:none}
+
+    /* Footer */
+    footer{background:#000;color:#fff;text-align:center;padding:2rem;margin-top:2rem}
+    footer ul{list-style:none;display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+    footer ul a{color:#fff;text-decoration:none;font-weight:700;border:1px solid rgba(255,255,255,.15);padding:.45rem .8rem;border-radius:10px}
+
+    /* ===== Responsivo ===== */
+    @media (max-width:980px){ .cols-2{grid-template-columns:1fr} .hero .content{grid-template-columns:1fr} }
+    @media (max-width:740px){ .kpis{grid-template-columns: repeat(2,1fr)} .cols-3{grid-template-columns:1fr} }
+
+    /* ===== Acessibilidade e Motion ===== */
+    :focus-visible{outline: none; box-shadow: var(--ring); border-radius: 12px}
+    @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+  </style>
+</head>
+<body>
+  <!-- ===== Navbar ===== -->
+  <div class="navbar">
+    <button class="menu-button" id="menuBtn" aria-label="Abrir menu" aria-controls="mainNav" aria-expanded="false">☰</button>
+    <a class="logo" href="index.html">EBEN<span>ÉZER</span></a>
+    <nav id="mainNav" aria-label="Menu principal" aria-hidden="true">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="produtos.html">Produtos</a></li>
+        <li><a href="sobre.html" aria-current="page">Sobre</a></li>
+        <li><a href="contatos.html">Contatos</a></li>
+        <li><a href="conta.html">Conta</a></li>
+      </ul>
+    </nav>
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+    <div class="nav-right">
+      <!-- Botão de tema é injetado por ebz-theme.js -->
+      <div class="nav-icon-container">
+        <a href="carrinho.html" aria-label="Ir para o carrinho">
+          <img src="./images/cart.png" alt="Carrinho" />
+          <span id="cartCounter" class="cart-counter">0</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="shell">
+      <div class="content">
+        <div>
+          <span class="eyebrow">Desde 2019 • Atendimento humano</span>
+          <h1>Sobre a Ebenezer — tecnologia de qualidade, <br>preço justo e confiança.</h1>
+          <p>Somos especialistas em produtos de tecnologia com curadoria, foco em pós‑venda e entregas rápidas. Acreditamos em respeito, transparência e suporte real.</p>
+          <div class="cta">
+            <a class="btn primary" href="produtos.html">Ver catálogo</a>
+            <a class="btn ghost" href="https://wa.me/5511967040951" target="_blank" rel="noopener">Falar no WhatsApp</a>
+          </div>
+          <div class="kpis" aria-label="indicadores">
+            <div class="kpi"><div class="num">+5.000</div><div class="lbl">Pedidos atendidos</div></div>
+            <div class="kpi"><div class="num">98%</div><div class="lbl">Clientes satisfeitos</div></div>
+            <div class="kpi"><div class="num">24–72h</div><div class="lbl">Tempo de envio</div></div>
+            <div class="kpi"><div class="num">100%</div><div class="lbl">Suporte humano</div></div>
+          </div>
+        </div>
+        <div class="art">
+          <div class="hero-card">
+            <img src="./images/gaming-msi-header.png" alt="Equipe Ebenezer preparando envios" style="border-radius:var(--radius)" />
+          </div>
+          <div class="blob" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Quem somos / Valores ===== -->
+  <section class="section">
+    <div class="shell grid cols-2" style="align-items:start">
+      <div class="card">
+        <h2 class="title">Quem somos</h2>
+        <p class="subtitle">Nascemos para simplificar a compra de tecnologia. Fazemos uma curadoria real de produtos, guiamos cada cliente na escolha e garantimos suporte de ponta a ponta.</p>
+        <div class="values">
+          <div class="value"><i>🔒</i><div><strong>Transparência</strong><br><span class="subtitle">Informações claras, preços justos e respeito em cada etapa.</span></div></div>
+          <div class="value"><i>⚡</i><div><strong>Agilidade</strong><br><span class="subtitle">Processos enxutos para enviar rápido — de 24 a 72h.</span></div></div>
+          <div class="value"><i>🤝</i><div><strong>Suporte humano</strong><br><span class="subtitle">Atendimento de verdade, sem robôs te deixando no vácuo.</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="title">Nossa jornada</h2>
+        <div class="timeline">
+          <div class="titem">
+            <h3>2019 • As primeiras vendas</h3>
+            <p>Atendimento local, conhecendo dores reais de quem compra tecnologia.</p>
+          </div>
+          <div class="titem">
+            <h3>2021 • Loja online</h3>
+            <p>Estruturamos catálogo, logística e pós‑venda para todo o Brasil.</p>
+          </div>
+          <div class="titem">
+            <h3>2024 • Expansão de portfólio</h3>
+            <p>Parcerias com marcas e fornecedores para ampliar opções e garantir estoque.</p>
+          </div>
+          <div class="titem">
+            <h3>Hoje • Comunidade fiel</h3>
+            <p>+5 mil pedidos, NPS alto e uma base de clientes que volta e recomenda.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Por que escolher a Ebenezer ===== -->
+  <section class="section">
+    <div class="shell">
+      <h2 class="title">Por que escolher a Ebenezer?</h2>
+      <p class="subtitle">Além do preço justo, entregamos confiança do primeiro contato ao pós‑venda.</p>
+      <div class="grid cols-3" style="margin-top:1rem">
+        <div class="feature"><i>✅</i><div><strong>Produtos verificados</strong><br><span class="subtitle">Curadoria real e garantia. Sem cilada.</span></div></div>
+        <div class="feature"><i>🚚</i><div><strong>Envio rápido</strong><br><span class="subtitle">Pedidos saem entre 24 e 72 horas.</span></div></div>
+        <div class="feature"><i>💬</i><div><strong>Atendimento que resolve</strong><br><span class="subtitle">WhatsApp ativo e suporte humano.</span></div></div>
+        <div class="feature"><i>💳</i><div><strong>Pagamento seguro</strong><br><span class="subtitle">Diversas formas e proteção em todo o processo.</span></div></div>
+        <div class="feature"><i>🔄</i><div><strong>Troca simples</strong><br><span class="subtitle">Política clara e ágil se algo não ficar perfeito.</span></div></div>
+        <div class="feature"><i>⭐</i><div><strong>Clientes fãs</strong><br><span class="subtitle">Avaliações altas e recorrência.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Depoimentos ===== -->
+  <section class="section" aria-labelledby="tit-dep">
+    <div class="shell">
+      <div class="title" id="tit-dep">O que falam da gente</div>
+      <div class="car-nav">
+        <button id="carPrev" aria-label="Anterior">◀</button>
+        <button id="carNext" aria-label="Próximo">▶</button>
+      </div>
+      <div class="carousel" id="carousel" aria-live="polite">
+        <article class="tcard">
+          <div class="person"><div class="avatar" aria-hidden="true"></div><div><strong>Kaylane</strong><div class="stars">★★★★★</div></div></div>
+          <p style="margin-top:.6rem">“Silencioso e muito rápido. Notebook rodando tudo no ultra pro meu curso de jogos.”</p>
+        </article>
+        <article class="tcard">
+          <div class="person"><div class="avatar" aria-hidden="true"></div><div><strong>Manoela</strong><div class="stars">★★★★★</div></div></div>
+          <p style="margin-top:.6rem">“Ótimo custo‑benefício e atendimento. Recomendei pra família.”</p>
+        </article>
+        <article class="tcard">
+          <div class="person"><div class="avatar" aria-hidden="true"></div><div><strong>Rafael</strong><div class="stars">★★★★☆</div></div></div>
+          <p style="margin-top:.6rem">“Headset com mic limpo e graves potentes. Entrega rápida.”</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section">
+    <div class="shell">
+      <h2 class="title">Perguntas frequentes</h2>
+      <div class="faq" style="margin-top:.6rem">
+        <details>
+          <summary>Qual o prazo de envio?</summary>
+          <div>Entre 24 e 72 horas após confirmação do pagamento, com código de rastreio.</div>
+        </details>
+        <details>
+          <summary>Como funciona a garantia?</summary>
+          <div>Todos os produtos possuem garantia legal e suporte do nosso time. Em caso de defeito, ajudamos no diagnóstico e providenciamos troca quando aplicável.</div>
+        </details>
+        <details>
+          <summary>Quais formas de pagamento são aceitas?</summary>
+          <div>Pix, cartão e boleto. Parcelamento disponível conforme operadora.</div>
+        </details>
+        <details>
+          <summary>Vocês ajudam a escolher?</summary>
+          <div>Sim! Fale com a gente no WhatsApp que indicamos o melhor para seu uso e orçamento.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA Final ===== -->
+  <section class="section">
+    <div class="shell cta-final">
+      <div class="inner">
+        <div>
+          <h2 class="title" style="color:#fff;margin:0">Pronto(a) para sua próxima compra consciente?</h2>
+          <p style="opacity:.95;margin-top:.2rem">Converse com a gente agora mesmo e tire quaisquer dúvidas.</p>
+        </div>
+        <div class="cta">
+          <a class="btn primary" href="produtos.html">Ver produtos</a>
+          <a class="btn ghost" href="https://wa.me/5511967040951" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <h1>EBEN<span>ÉZER</span></h1>
+    <p>Nosso objetivo é ajudar pessoas a adquirir nossos produtos à distância</p>
+    <ul>
+      <li><a href="https://wa.me/5511967040951" target="_blank" rel="noopener">WhatsApp</a></li>
+      <li><a href="https://www.instagram.com/ebenezerassistencia" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="https://www.tiktok.com/@ebenzer.assistnci" target="_blank" rel="noopener">TikTok</a></li>
+      <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a></li>
+    </ul>
+    <p>2025 - Todos os direitos reservados</p>
+  </footer>
+
+  <script>
+    /* Carrinho badge */
+    (function(){
+      const el = document.getElementById('cartCounter');
+      try{ const cart = JSON.parse(localStorage.getItem('cart')||'[]'); if(el) el.textContent = cart.length; }catch{}
+    })();
+
+    /* Drawer mobile */
+    (function(){
+      const menuBtn = document.getElementById('menuBtn');
+      const nav = document.getElementById('mainNav');
+      const overlay = document.getElementById('navOverlay');
+      function toggleMenu(show){
+        const willOpen = typeof show==='boolean' ? show : !nav.classList.contains('show-menu');
+        nav.classList.toggle('show-menu', willOpen);
+        overlay.classList.toggle('active', willOpen);
+        menuBtn.setAttribute('aria-expanded', String(willOpen));
+        nav.setAttribute('aria-hidden', String(!willOpen));
+        document.body.style.overflow = willOpen ? 'hidden' : '';
+      }
+      menuBtn.addEventListener('click', ()=>toggleMenu());
+      overlay.addEventListener('click', ()=>toggleMenu(false));
+      window.addEventListener('keydown', e=>{ if(e.key==='Escape') toggleMenu(false); });
+      nav.querySelectorAll('a').forEach(a=>{
+        a.addEventListener('click', (e)=>{
+          if(nav.classList.contains('show-menu')){
+            e.preventDefault();
+            const href=a.getAttribute('href');
+            toggleMenu(false);
+            setTimeout(()=>{ window.location.href=href; },120);
+          }
+        }, {passive:false});
+      });
+    })();
+
+    /* Carousel controlls */
+    (function(){
+      const car = document.getElementById('carousel');
+      const prev = document.getElementById('carPrev');
+      const next = document.getElementById('carNext');
+      if(!car) return;
+      const step = 320; // px
+      prev?.addEventListener('click', ()=> car.scrollBy({left:-step, behavior:'smooth'}));
+      next?.addEventListener('click', ()=> car.scrollBy({left: step, behavior:'smooth'}));
+    })();
+  </script>
+</body>
+</html>

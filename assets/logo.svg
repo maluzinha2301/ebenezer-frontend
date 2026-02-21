@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="40" viewBox="0 0 140 40">
+  <rect rx="8" width="140" height="40" fill="#000"/>
+  <text x="16" y="26" font-family="Segoe UI, Arial" font-size="20" font-weight="700" fill="#0084FF">Ebenezer</text>
+  <circle cx="120" cy="20" r="6" fill="#fff"/>
+</svg>
